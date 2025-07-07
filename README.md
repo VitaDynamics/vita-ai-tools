@@ -1,1 +1,106 @@
-# vita-tools
+# VITA Tools
+
+A computer vision toolkit for 3D point cloud processing and visualization. This package provides utilities for converting depth and RGB images to point clouds, transforming point clouds to bird's eye view representations, and visualizing 3D data.
+
+## Features
+
+- **Image to Point Cloud**: Convert depth and RGB images to 3D point clouds
+- **Point Cloud Processing**: Filter, transform, and process point cloud data
+- **Bird's Eye View**: Generate BEV representations from point clouds
+- **Visualization**: Tools for visualizing point clouds and BEV maps
+
+## Installation
+
+### Using uv (recommended)
+
+```bash
+# Install in development mode
+uv pip install -e .
+
+# Install with development dependencies
+uv pip install -e ".[dev]"
+```
+
+### Using pip
+
+```bash
+# Install in development mode
+pip install -e .
+
+# Install with development dependencies
+pip install -e ".[dev]"
+```
+
+## Quick Start
+
+```python
+import numpy as np
+from vita_toolkit import depth_rgb_to_pcd, visualize_point_cloud, points_to_voxel_batch
+
+# Convert depth image to point cloud
+depth = np.random.rand(480, 640).astype(np.float32)
+intrinsic = {
+    'fx': 525.0, 'fy': 525.0,
+    'cx': 320.0, 'cy': 240.0
+}
+extrinsic = {
+    'rotation': np.eye(3),
+    'translation': np.zeros(3)
+}
+
+pcd = depth_rgb_to_pcd(depth, intrinsic, extrinsic)
+
+# Visualize point cloud
+visualize_point_cloud(pcd)
+
+# Convert to voxel representation
+voxel_size = np.array([0.1, 0.1, 0.1])
+coors_range = np.array([-50, -50, -3, 50, 50, 1])
+voxels, coords, num_points = points_to_voxel_batch(pcd, voxel_size, coors_range)
+```
+
+## Modules
+
+### `img_to_pc`
+- `align_size()`: Align depth and RGB image sizes
+- `depth_rgb_to_pcd()`: Convert depth and RGB images to point cloud
+
+### `pc_to_bev`
+- `points_to_voxel_batch()`: Convert point cloud to voxel representation
+- `filter_pcd()`: Filter point cloud data
+- `project_pc_to_bev()`: Project point cloud to bird's eye view
+
+### `viz`
+- `visualize_point_cloud()`: Visualize 3D point clouds
+- `visualize_bev()`: Visualize bird's eye view maps
+
+## Development
+
+```bash
+# Install development dependencies
+uv pip install -e ".[dev]"
+
+# Run tests
+pytest
+
+# Format code
+black vita_toolkit/
+isort vita_toolkit/
+
+# Type checking
+mypy vita_toolkit/
+```
+
+## Requirements
+
+- Python >= 3.11
+- NumPy
+- OpenCV
+- Open3D
+- PyTorch
+- Matplotlib
+- SciPy
+
+## License
+
+MIT License
