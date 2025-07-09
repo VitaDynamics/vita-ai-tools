@@ -61,7 +61,12 @@ pip install vita-tools[gpu,dev]
 
 ```python
 import numpy as np
-from vita_toolkit import depth_rgb_to_pcd, visualize_point_cloud, points_to_voxel_batch
+from vita_toolkit import (
+    depth_rgb_to_pcd,
+    visualize_point_cloud,
+    visualize_bev,
+    points_to_voxel_batch,
+)
 
 # Convert depth image to point cloud
 depth = np.random.rand(480, 640).astype(np.float32)
