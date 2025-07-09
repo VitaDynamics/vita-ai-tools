@@ -18,24 +18,30 @@ A computer vision toolkit for 3D point cloud processing and visualization. This 
 ### Using uv (recommended)
 
 ```bash
-# General mode (lightweight, no GPU dependencies)
-uv pip install vita-tools
+# Clone the repository first
+git clone # This project
+cd vita-ai-tools
 
-# GPU mode (includes torch, torchvision, transformers)
-uv pip install vita-tools[gpu]
+# Basic installation (core dependencies only)
+uv sync
 
-# Development mode (includes testing and linting tools)
-uv pip install vita-tools[dev]
+# Install with GPU dependencies
+uv sync --extra gpu
 
-# Full development setup (GPU + dev dependencies)
-uv pip install vita-tools[gpu,dev]
+# Install with development dependencies
+uv sync --extra dev
 
-# Local development installation
-uv pip install -e .
-uv pip install -e ".[gpu,dev]"
+# Install with all dependencies (GPU + dev)
+uv sync --all-extras
+
+# Production installation (no dev dependencies)
+uv sync --no-dev
+
+# editable usage 
+u sync --editable
 ```
 
-### Using pip
+### Alternative: Using pip
 
 ```bash
 # General mode (lightweight, no GPU dependencies)
@@ -102,23 +108,28 @@ voxels, coords, num_points = points_to_voxel_batch(pcd, voxel_size, coors_range)
 ## Development
 
 ```bash
-# Install development dependencies
-uv pip install -e ".[dev]"
+# Setup development environment
+uv sync --extra dev
 
 # Run tests
-pytest
+uv run pytest
 
 # Format code
-black vita_toolkit/
-isort vita_toolkit/
+uv run black vita_toolkit/
+uv run isort vita_toolkit/
 
 # Type checking
-mypy vita_toolkit/
+uv run mypy vita_toolkit/
+
+# Run linting
+uv run ruff check vita_toolkit/
+uv run ruff format vita_toolkit/
 ```
 
 ## Requirements
 
 ### Core Dependencies
+
 - Python >= 3.11
 - NumPy
 - OpenCV
@@ -128,6 +139,7 @@ mypy vita_toolkit/
 - LMDB
 
 ### GPU Dependencies (optional)
+
 - PyTorch
 - Torchvision
 - Open3D
