@@ -18,21 +18,37 @@ A computer vision toolkit for 3D point cloud processing and visualization. This 
 ### Using uv (recommended)
 
 ```bash
-# Install in development mode
-uv pip install -e .
+# General mode (lightweight, no GPU dependencies)
+uv pip install vita-tools
 
-# Install with development dependencies
-uv pip install -e ".[dev]"
+# GPU mode (includes torch, torchvision, transformers)
+uv pip install vita-tools[gpu]
+
+# Development mode (includes testing and linting tools)
+uv pip install vita-tools[dev]
+
+# Full development setup (GPU + dev dependencies)
+uv pip install vita-tools[gpu,dev]
+
+# Local development installation
+uv pip install -e .
+uv pip install -e ".[gpu,dev]"
 ```
 
 ### Using pip
 
 ```bash
-# Install in development mode
-pip install -e .
+# General mode (lightweight, no GPU dependencies)
+pip install vita-tools
 
-# Install with development dependencies
-pip install -e ".[dev]"
+# GPU mode (includes torch, torchvision, transformers)
+pip install vita-tools[gpu]
+
+# Development mode
+pip install vita-tools[dev]
+
+# Full development setup
+pip install vita-tools[gpu,dev]
 ```
 
 ## Quick Start
@@ -102,13 +118,21 @@ mypy vita_toolkit/
 
 ## Requirements
 
+### Core Dependencies
 - Python >= 3.11
 - NumPy
 - OpenCV
-- Open3D
-- PyTorch
+- Pillow
 - Matplotlib
 - SciPy
+- LMDB
+
+### GPU Dependencies (optional)
+- PyTorch
+- Torchvision
+- Open3D
+- Transformers
+- Accelerate
 
 ## License
 
