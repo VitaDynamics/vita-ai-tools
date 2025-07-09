@@ -70,7 +70,7 @@ def depth_rgb_to_pcd(
         extrinsic: camera extrinsic param. If rgb provided, this camera should be rgb camera.
         rgb: input rgb data, used as pointcloud color.
         depth_rgb_scale: depth and rgb scale factor, only used when rgb is None.
-        depht_trunc: truncate depth value. Unit is meter.
+        depth_trunc: truncate depth value. Unit is meter.
     
     Returns:
         tuple: (points, colors) where points is np.ndarray of shape (N, 3) and 
