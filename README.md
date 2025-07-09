@@ -91,7 +91,7 @@ voxels, coords, num_points = points_to_voxel_batch(pcd, voxel_size, coors_range)
 ```
 vita_toolkit/
     adaptive_scaling.py
-    depht_lidar_matching.py
+    depth_lidar_matching.py
     filesystem_reader.py
     img_to_pc.py
     lmdb_reader.py
