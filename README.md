@@ -84,8 +84,24 @@ voxel_size = np.array([0.1, 0.1, 0.1])
 coors_range = np.array([-50, -50, -3, 50, 50, 1])
 voxels, coords, num_points = points_to_voxel_batch(pcd, voxel_size, coors_range)
 ```
-
 - All template usage is in notebooks folder.
+
+## Directory Structure
+
+```
+vita_toolkit/
+    adaptive_scaling.py
+    depht_lidar_matching.py
+    filesystem_reader.py
+    img_to_pc.py
+    lmdb_reader.py
+    pc_to_bev.py
+    point_cloud/
+        __init__.py
+        solvers.py
+notebooks/
+    point_cloud.ipynb
+```
 
 ## Modules
 
