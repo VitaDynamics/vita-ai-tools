@@ -2,6 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import open3d as o3d
 from typing import Optional, Tuple
+import rerun as rr
+import matplotlib
+
+
 
 def visualize_point_cloud(
     points: np.ndarray,
@@ -129,3 +133,5 @@ def visualize_bev(
         print(f"Figure saved to {save_path}")
     
     plt.show()
+
+

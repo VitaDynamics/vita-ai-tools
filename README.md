@@ -9,6 +9,10 @@ A computer vision toolkit for 3D point cloud processing and visualization. This 
 - **Bird's Eye View**: Generate BEV representations from point clouds
 - **Visualization**: Tools for visualizing point clouds and BEV maps
 
+## Design
+
+- For visualization, this repo is optimized for headless server. So we use rerun and matplotlib to viz the data. Always prioritize Rerun.
+
 ## Installation
 
 ### Using uv (recommended)
@@ -59,18 +63,23 @@ coors_range = np.array([-50, -50, -3, 50, 50, 1])
 voxels, coords, num_points = points_to_voxel_batch(pcd, voxel_size, coors_range)
 ```
 
+- All template usage is in notebooks folder.
+
 ## Modules
 
 ### `img_to_pc`
+
 - `align_size()`: Align depth and RGB image sizes
 - `depth_rgb_to_pcd()`: Convert depth and RGB images to point cloud
 
 ### `pc_to_bev`
+
 - `points_to_voxel_batch()`: Convert point cloud to voxel representation
 - `filter_pcd()`: Filter point cloud data
 - `project_pc_to_bev()`: Project point cloud to bird's eye view
 
 ### `viz`
+
 - `visualize_point_cloud()`: Visualize 3D point clouds
 - `visualize_bev()`: Visualize bird's eye view maps
 

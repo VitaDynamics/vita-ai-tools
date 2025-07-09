@@ -10,20 +10,25 @@ This package provides utilities for:
 __version__ = "0.1.0"
 
 # Import main functions from submodules
-from .img_to_pc import (
+from .point_cloud.img_to_pc import (
     align_size,
     depth_rgb_to_pcd,
 )
 
-from .pc_to_bev import (
+from .point_cloud.pc_to_bev import (
     points_to_voxel_batch,
     filter_pcd,
     project_pc_to_bev,
 )
 
-from .viz import (
+from .point_cloud.viz import (
     visualize_point_cloud,
     visualize_bev,
+)
+
+from .filesystem_reader import (
+    FilesystemReader,
+    read_sensor_data,
 )
 
 # Define what gets imported with "from vita_toolkit import *"
@@ -38,4 +43,7 @@ __all__ = [
     # Visualization functions
     "visualize_point_cloud",
     "visualize_bev",
+    # Filesystem reader functions
+    "FilesystemReader",
+    "read_sensor_data",
 ]

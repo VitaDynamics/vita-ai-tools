@@ -218,19 +218,6 @@ def filter_pcd(point_cloud: np.ndarray, pc_range: np.ndarray) -> np.ndarray:
     Returns:
     np.ndarray: The filtered point cloud data.
     """
-    # Expand point cloud data with homogeneous coordinates
-    point_cloud = np.concatenate([point_cloud[:, :3], np.ones((point_cloud.shape[0], 1))], axis=1)
-    xyz = np.array([0, 0, 0, 1])  # lidar state
-    rpy = np.array([0, 0, 180])
-    rotation_matrix = R.from_euler('xyz', rpy, degrees=True).as_matrix()
-
-    # Create transformation matrix
-    Tr = np.eye(4)  # Start with 4x4 identity matrix
-    Tr[:3, :3] = rotation_matrix  # Set rotation part
-    Tr[:3, 3] = xyz[:3]  # Set translation part
-
-    # Apply inverse transformation to the point cloud
-    point_cloud = (np.linalg.inv(Tr) @ point_cloud.T).T
         
     # Remove points that belong to the ego vehicle
     ego_point_mask = (point_cloud[:, 0] < 0.1) & (point_cloud[:, 0] > -1) & (point_cloud[:, 1] > -0.2) & (point_cloud[:, 1] < 0.2)
