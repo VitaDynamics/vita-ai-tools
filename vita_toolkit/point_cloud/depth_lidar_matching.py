@@ -61,12 +61,23 @@ def align_depth_lidar(
         - valid_lidar_depths: Corresponding lidar depths
     """
     if use_solver:
+        # Project lidar points to image plane
+        image_coords_all = project_points_to_image_plane(lidar_points, intrinsic_params)
+        lidar_depths_all = lidar_points[:, 2]
+
         # Use the comprehensive solver
         solver = DepthLidarSolver(**solver_kwargs)
-        result = solver.solve(depth_map, lidar_points, intrinsic_params, method)
+        result = solver.solve(
+            depth_map,
+            image_coords_all,
+            lidar_depths_all,
+            method,
+            robust_loss=solver_kwargs.get("robust_loss", "huber"), # Pass relevant kwargs if needed by solve
+            initial_scale=solver_kwargs.get("initial_scale")
+        )
         
         # Extract lidar depths from depth pairs for backward compatibility
-        valid_lidar_depths = result.depth_pairs[:, 1]
+        valid_lidar_depths = result.depth_pairs[:, 1] # This remains the same as AlignmentResult structure is unchanged
         
         return result.scale_factor, result.depth_pairs, valid_lidar_depths
     
