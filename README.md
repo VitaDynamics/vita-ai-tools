@@ -4,10 +4,11 @@ A computer vision toolkit for 3D point cloud processing and visualization. This 
 
 ## Features
 
-- **Image to Point Cloud**: Convert depth and RGB images to 3D point clouds
-- **Point Cloud Processing**: Filter, transform, and process point cloud data
-- **Bird's Eye View**: Generate BEV representations from point clouds
-- **Visualization**: Tools for visualizing point clouds and BEV maps
+- **Image to Point Cloud**: Convert depth and RGB images to 3D point clouds.
+- **Depth-LiDAR Alignment**: Align point clouds generated from depth sensors with LiDAR data.
+- **Point Cloud Processing**: Filter, transform, and process point cloud data.
+- **Bird's Eye View**: Generate BEV representations from point clouds.
+- **Visualization**: Tools for visualizing point clouds and BEV maps using `rerun`.
 
 ## Design
 
@@ -95,36 +96,37 @@ voxels, coords, num_points = points_to_voxel_batch(pcd, voxel_size, coors_range)
 
 ```
 vita_toolkit/
-    adaptive_scaling.py
-    depth_lidar_matching.py
-    filesystem_reader.py
-    img_to_pc.py
-    lmdb_reader.py
-    pc_to_bev.py
-    point_cloud/
+    filesystem_reader.py  # Reads data from filesystem
+    lmdb_reader.py        # Reads data from LMDB databases
+    point_cloud/          # Point cloud processing functionalities
         __init__.py
-        solvers.py
+        adaptive_scaling.py     # Adaptive scaling for depth-lidar alignment
+        depth_lidar_matching.py # Align depth and LiDAR data
+        img_to_pc.py            # Convert images/depth to point clouds
+        pc_to_bev.py            # Project point clouds to Bird's Eye View
+        solvers.py              # Solvers for alignment tasks
+        viz.py                  # Visualization utilities (e.g., using rerun)
+        README.md               # Detailed documentation for this module
+    __init__.py           # Makes vita_toolkit a package
 notebooks/
-    point_cloud.ipynb
+    point_cloud.ipynb     # Example usage of the point_cloud module
+README.md                 # This file
+.gitignore
+pyproject.toml            # Project metadata and dependencies
+uv.lock                   # Lockfile for uv
+RULES.md                  # Contributor guidelines or rules (if present)
 ```
 
-## Modules
+## `vita_toolkit.point_cloud` Module
 
-### `img_to_pc`
+The `vita_toolkit.point_cloud` directory contains a comprehensive suite of tools for 3D point cloud processing. Key capabilities include:
 
-- `align_size()`: Align depth and RGB image sizes
-- `depth_rgb_to_pcd()`: Convert depth and RGB images to point cloud
+*   **Point Cloud Generation**: Creating 3D point clouds from depth maps and RGB images (`img_to_pc.py`).
+*   **Depth-LiDAR Alignment**: Sophisticated methods to align point clouds derived from depth sensors with those from LiDAR, including various solvers and adaptive scaling techniques (`depth_lidar_matching.py`, `solvers.py`, `adaptive_scaling.py`).
+*   **Bird's Eye View (BEV) Projection**: Transforming 3D point clouds into 2D BEV representations, commonly used in robotics and autonomous systems (`pc_to_bev.py`).
+*   **Visualization**: Utilities to visualize point clouds and BEV maps using the `rerun` library (`viz.py`).
 
-### `pc_to_bev`
-
-- `points_to_voxel_batch()`: Convert point cloud to voxel representation
-- `filter_pcd()`: Filter point cloud data
-- `project_pc_to_bev()`: Project point cloud to bird's eye view
-
-### `viz`
-
-- `visualize_point_cloud()`: Visualize 3D point clouds
-- `visualize_bev()`: Visualize bird's eye view maps
+For detailed information on how to use this module, including code examples and descriptions of each sub-component, please refer to its dedicated README: [`vita_toolkit/point_cloud/README.md`](vita_toolkit/point_cloud/README.md).
 
 ## Development
 
