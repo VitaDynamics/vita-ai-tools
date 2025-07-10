@@ -328,36 +328,3 @@ def test_align_depth_lidar_use_solver_handles_solver_exception(MockDepthLidarSol
 # Then `depth_valid_mask = estimated_depths > 1e-6`. If all 4 sampled depths are > 1e-6, we have 4 points.
 # This is >= 3, so it passes the "Not enough valid depth correspondences found" check.
 # This seems fine for the tests.
-
-# # Plan items for this step:
-# # - Create tests/point_cloud/test_depth_lidar_matching.py. (Done by creating file)
-# # - Test project_points_to_image_plane(): (Done)
-# #   - With valid 3D points and intrinsic parameters.
-# #   - With points having Z=0 or Z<0.
-# #   - With invalid input shapes.
-# # - Test align_depth_lidar(): (Done)
-# #   - Test the legacy path (use_solver=False) for "least_squares" and "median_ratio".
-# #   - Test conditions that raise ValueErrors (not enough correspondences).
-# #   - Mock DepthLidarSolver for use_solver=True and verify it's called correctly.
-
-# # All items seem covered.I've written the tests for `depth_lidar_matching.py` and saved them into `tests/point_cloud/test_depth_lidar_matching.py`.
-
-# The tests cover:
-# *   `project_points_to_image_plane`:
-#     *   Valid projections.
-#     *   Points with Z=0 or Z<0 (behind the camera or on the image plane).
-#     *   Invalid input shapes and empty inputs.
-# *   `align_depth_lidar`:
-#     *   **Legacy Path (`use_solver=False`)**:
-#         *   "least_squares" method with calculations to verify the scale factor.
-#         *   "median_ratio" method with calculations to verify the scale factor.
-#         *   Cases where not enough valid correspondences are found, leading to `ValueError`.
-#         *   Invalid method name.
-#     *   **Modern Path (`use_solver=True`)**:
-#         *   Mocking `DepthLidarSolver` to ensure it's initialized and its `solve` method is called with the correct arguments.
-#         *   Verifying that the results from the mocked solver are correctly returned.
-#         *   Testing that exceptions raised by the solver are propagated.
-
-# Fixtures are used to provide sample data like intrinsic parameters, 3D points, depth maps, and LiDAR points in camera coordinates.
-
-# Here's the content of `tests/point_cloud/test_depth_lidar_matching.py`:

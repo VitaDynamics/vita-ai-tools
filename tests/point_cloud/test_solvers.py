@@ -70,50 +70,6 @@ def sample_image_coords(ideal_correspondences):
     return np.random.rand(n_points, 2) * np.array([30,20]) # Assuming 30x20 image space
 
 
-# Helper to mock the correspondence generation part of solver.solve
-# This allows testing solver methods directly with predefined correspondences
-def mock_correspondence_generation(solver_instance, estimated_depths, lidar_depths, image_coords=None):
-    def _solve_decorator(func):
-        @patch.object(solver_instance, '_solve_adaptive_neighborhood') # Mock specific methods if needed later
-        @patch.object(solver_instance, '_solve_ransac')
-        @patch.object(solver_instance, '_solve_median_ratio')
-        @patch.object(solver_instance, '_solve_robust_least_squares')
-        @patch.object(solver_instance, '_solve_least_squares')
-        def wrapped_solve(self_obj, depth_map, lidar_points, intrinsic_params, method, **kwargs):
-            # Instead of full projection, directly call the targeted private solve method
-            # with the provided estimated_depths and lidar_depths
-
-            # This part is tricky because the private methods are part of the same class.
-            # We need to ensure `self_obj` (which is `solver_instance`) calls its actual private method,
-            # not a mock of it, unless that's what we want for a specific sub-test.
-            # The current patches will mock them all away.
-            # For this helper, we want to test ONE specific _solve_METHOD, so others can be mocked.
-
-            if method == "least_squares":
-                # Call the actual _solve_least_squares, not its mock
-                return solver_instance._solve_least_squares(estimated_depths, lidar_depths)
-            elif method == "robust_least_squares":
-                robust_loss = kwargs.get('robust_loss', 'huber')
-                initial_scale = kwargs.get('initial_scale')
-                return solver_instance._solve_robust_least_squares(estimated_depths, lidar_depths, robust_loss, initial_scale)
-            elif method == "median_ratio":
-                return solver_instance._solve_median_ratio(estimated_depths, lidar_depths)
-            elif method == "ransac":
-                return solver_instance._solve_ransac(estimated_depths, lidar_depths)
-            elif method == "adaptive_neighborhood":
-                if image_coords is None:
-                    raise ValueError("image_coords needed for adaptive_neighborhood")
-                initial_scale = kwargs.get('initial_scale')
-                # This will call the actual _solve_adaptive_neighborhood
-                return solver_instance._solve_adaptive_neighborhood(estimated_depths, lidar_depths, image_coords, initial_scale)
-
-            # Fallback or raise error if method not handled by this test setup
-            raise ValueError(f"Method {method} not set up for direct testing in mock_correspondence_generation")
-
-        return func(wrapped_solve) # Pass the wrapped_solve to the test function
-    return _solve_decorator
-
-
 # Tests for DepthLidarSolver methods
 def test_solver_least_squares_ideal(ideal_correspondences):
     solver = DepthLidarSolver()
@@ -328,39 +284,3 @@ def test_solver_apply_adaptive_scaling_to_depth_map(MockScaler, sample_depth_map
 # However, testing private methods directly (e.g., `solver._solve_least_squares(est, lid)`) is simpler
 # and achieves the same goal of isolated testing for each algorithm.
 # The test `test_solver_solve_method_dispatch` covers the main `solve` method's orchestration.
-
-# # Plan items for this step:
-# # - Create tests/point_cloud/test_solvers.py. (Done by creating file)
-# # - Test DepthLidarSolver.solve() for each method: (Done via direct private method tests and solve() dispatch test)
-# #   - "least_squares"
-# #   - "robust_least_squares" (with different loss_type and outlier data)
-# #   - "median_ratio"
-# #   - "ransac"
-# #   - "adaptive_neighborhood" (mocking AdaptiveNeighborhoodScaler)
-# #   - Verify AlignmentResult fields (implicitly done by checking scale_factor, rmse, etc.)
-# #   - Test error conditions (e.g., not enough correspondences in solve() dispatch test).
-# # - Test DepthLidarSolver.evaluate_alignment(). (Done)
-# # - Test DepthLidarSolver.apply_adaptive_scaling_to_depth_map(): (Done)
-# #   - With and without local scales in AlignmentResult.
-# #   - Mock AdaptiveNeighborhoodScaler.apply_adaptive_scaling.
-
-# # All items seem covered.I've completed drafting the tests for `solvers.py` and will now create the file `tests/point_cloud/test_solvers.py` with this content.
-
-# The tests cover the following aspects of `DepthLidarSolver`:
-# *   **Individual Solver Algorithms** (tested as private methods for simplicity and isolation):
-#     *   `_solve_least_squares`: Tested with ideal data (scale=1) and scaled data (scale=2).
-#     *   `_solve_robust_least_squares`: Tested with ideal data, noisy data (using various loss functions like 'huber', 'soft_l1', 'cauchy'), and data with outliers to check robustness.
-#     *   `_solve_median_ratio`: Tested with ideal data and data with outliers.
-#     *   `_solve_ransac`: Tested with ideal data and data with outliers, verifying outlier ratio.
-#     *   `_solve_adaptive_neighborhood`: Tested by mocking `AdaptiveNeighborhoodScaler` to ensure it's called correctly and its results are used.
-# *   **Main `solve` Method Orchestration**:
-#     *   A test (`test_solver_solve_method_dispatch`) mocks the initial point projection and correspondence generation step to verify that `solve` correctly dispatches to the appropriate internal solver method (e.g., `_solve_least_squares`, `_solve_median_ratio`) based on the `method` argument.
-#     *   It also checks the error handling for insufficient correspondences.
-# *   **`evaluate_alignment` Method**:
-#     *   Tested with a dummy `AlignmentResult` to ensure metrics like RMSE and R2 score are computed.
-# *   **`apply_adaptive_scaling_to_depth_map` Method**:
-#     *   Tested for both scenarios: when `AlignmentResult` contains local scale information (triggering a call to `AdaptiveNeighborhoodScaler.apply_adaptive_scaling`) and when it doesn't (falling back to global scaling).
-
-# Fixtures provide various types of correspondence data (ideal, scaled, noisy, with outliers) and sample data for depth maps and LiDAR points. Mocking is used extensively, especially for external classes like `AdaptiveNeighborhoodScaler` and for isolating parts of the `solve` method's internal pipeline.
-
-# Here is the content for `tests/point_cloud/test_solvers.py`:
