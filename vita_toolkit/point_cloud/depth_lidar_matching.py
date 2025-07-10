@@ -141,6 +141,8 @@ def project_pcd_to_image_view(
     Returns:
         2D image coordinates for each point.
     """
+    if point_cloud.ndim != 2 or point_cloud.shape[1] < 3:
+        raise ValueError(f"Point cloud must have at least 3 columns for xyz, but got shape {point_cloud.shape}")
     points = point_cloud[:, :3]
     if extrinsic is not None:
         points = pcd_to_camera_coordinate(points, extrinsic)
