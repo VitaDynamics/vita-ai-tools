@@ -137,4 +137,5 @@ def depth_rgb_to_pcd(
         pcd = o3d.geometry.PointCloud.create_from_rgbd_image(
             rgbd, intrinsic_o3d, extrinsic["data"]
         )
-        # Return point cloud coordinates and color information        return np.asarray(pcd.points), np.asarray(pcd.colors)
+        # Return point cloud coordinates and color information        
+        return np.asarray(pcd.points), np.asarray(pcd.colors)
