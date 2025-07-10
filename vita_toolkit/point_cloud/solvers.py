@@ -4,6 +4,7 @@ from typing import Dict, Optional
 from dataclasses import dataclass
 from scipy.optimize import least_squares
 from .adaptive_scaling import AdaptiveNeighborhoodScaler, AdaptiveScalingConfig
+# project_points_to_image_plane will no longer be called from here.
 
 
 
@@ -50,19 +51,19 @@ class DepthLidarSolver:
     def solve(
         self,
         depth_map: np.ndarray,
-        lidar_points: np.ndarray,
-        intrinsic_params: Dict[str, float],
+        image_coords: np.ndarray, # Changed from lidar_points & intrinsic_params
+        lidar_depths: np.ndarray, # Changed from lidar_points
         method: str = "robust_least_squares",
         robust_loss: str = "huber",
         initial_scale: Optional[float] = None
     ) -> AlignmentResult:
         """
-        Solve for optimal depth-lidar alignment.
+        Solve for optimal depth-lidar alignment using pre-projected image coordinates.
         
         Args:
             depth_map: Estimated depth map, shape (H, W)
-            lidar_points: 3D lidar points in camera coordinate system, shape (N, 3)
-            intrinsic_params: Camera intrinsic parameters
+            image_coords: 2D image coordinates of lidar points, shape (N, 2)
+            lidar_depths: Corresponding lidar depth values (Z from camera coord), shape (N,)
             method: "least_squares", "robust_least_squares", "median_ratio", "ransac", "adaptive_neighborhood"
             robust_loss: "linear", "huber", "soft_l1", "cauchy", "arctan"
             initial_scale: Initial guess for scale factor
@@ -70,11 +71,9 @@ class DepthLidarSolver:
         Returns:
             AlignmentResult with comprehensive metrics
         """
-        # Get correspondences
-        image_coords = project_points_to_image_plane(lidar_points, intrinsic_params)
-        lidar_depths = lidar_points[:, 2]
+        # image_coords and lidar_depths are now direct inputs.
         
-        # Find valid projections
+        # Find valid projections based on image_coords and lidar_depths
         h, w = depth_map.shape
         u, v = image_coords[:, 0], image_coords[:, 1]
         
