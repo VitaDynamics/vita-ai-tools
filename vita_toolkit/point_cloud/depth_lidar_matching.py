@@ -136,7 +136,7 @@ def project_pcd_to_image_view(
     Args:
         point_cloud: Point cloud coordinates, shape (N, 3+) where the first three columns are xyz.
         intrinsic_params: Camera intrinsic parameters.
-        extrinsic: Optional extrinsic matrix mapping point cloud frame to camera frame.
+        extrinsic: Optional extrinsic parameters (dict with "data" key for 4x4 matrix).
 
     Returns:
         2D image coordinates for each point.
