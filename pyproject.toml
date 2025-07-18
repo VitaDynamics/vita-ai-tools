@@ -31,7 +31,8 @@ dependencies = [
     "pillow>=10.0.0",
     "matplotlib>=3.7.0",
     "scipy>=1.10.0",
-    "open3d>=0.17.0"
+    "open3d>=0.17.0",
+    "rerun-sdk>=0.24.0"
 ]
 
 [project.optional-dependencies]

@@ -160,6 +160,7 @@ uv run ruff format vita_toolkit/
 - Matplotlib
 - SciPy
 - LMDB
+- Rerun SDK
 
 ### GPU Dependencies (optional)
 
